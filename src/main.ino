@@ -10,13 +10,13 @@ CRGB LEDs[NUM_ROWS * NUM_COLUMNS];
 CRGB wallsColor = CRGB::Gray;
 CRGB playerColor = CRGB::Red;
 
-int playerPositionX = 0;
-int playerPositionY = 0;
+int playerPositionX = 2;
+int playerPositionY = 2;
 
-int board[10][10] = {
+int board[NUM_ROWS][NUM_COLUMNS] = {
     {5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
     {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 1, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
     {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
     {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
     {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
@@ -28,7 +28,7 @@ int board[10][10] = {
 void setup()
 {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(LEDs, NUM_ROWS * NUM_COLUMNS);
-  FastLED.setBrightness(10);
+  FastLED.setBrightness(2);
   FastLED.clear();
 }
 
@@ -47,30 +47,33 @@ void loop()
 
     int posX = playerPositionX + directionX;
     int posY = playerPositionY + directionY;
+    int cell = board[posX][posY];
 
-    if (posX != playerPositionX || posY != playerPositionY)
+    if (posX <= 9 && posX >= 0 && cell == 0)
     {
-      LEDs[getLedPosition(playerPositionX, playerPositionY)] = CRGB::Black;
+      playerPositionX = posX;
     }
 
-    if (posX <= 9 && posX >= 0)
+    if (posY <= 9 && posY >= 0 && cell == 0)
     {
-      playerPositionX += directionX;
-    }
-
-    if (posY <= 9 && posY >= 0)
-    {
-      playerPositionY += directionY;
+      playerPositionY = posY;
     }
   }
 
-  // for (int row = 0; row < NUM_ROWS; row++)
-  // {
-  //   for (int column = 0; column < NUM_COLUMNS; column++)
-  //   {
-  //     /* code */
-  //   }
-  // }
+  for (int row = 0; row < NUM_ROWS; row++)
+  {
+    for (int column = 0; column < NUM_COLUMNS; column++)
+    {
+      if (board[row][column] == 5)
+      {
+        LEDs[getLedPosition(row, column)] = wallsColor;
+      }
+      else if (board[row][column] == 0)
+      {
+        LEDs[getLedPosition(row, column)] = CRGB::Black;
+      }
+    }
+  }
 
   LEDs[getLedPosition(playerPositionX, playerPositionY)] = playerColor;
   FastLED.show();
