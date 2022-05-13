@@ -6,10 +6,24 @@
 #define JOYSTICK_X_PIN A0
 #define JOYSTICK_Y_PIN A1
 
-CRGB LEDs[NUM_ROWS * DATA_PIN];
+CRGB LEDs[NUM_ROWS * NUM_COLUMNS];
+CRGB wallsColor = CRGB::Gray;
+CRGB playerColor = CRGB::Red;
 
 int playerPositionX = 0;
 int playerPositionY = 0;
+
+int board[10][10] = {
+    {5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 1, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
+    {5, 5, 5, 5, 5, 5, 5, 5, 5, 5}};
 
 void setup()
 {
@@ -50,7 +64,15 @@ void loop()
     }
   }
 
-  LEDs[getLedPosition(playerPositionX, playerPositionY)] = CRGB::Blue;
+  // for (int row = 0; row < NUM_ROWS; row++)
+  // {
+  //   for (int column = 0; column < NUM_COLUMNS; column++)
+  //   {
+  //     /* code */
+  //   }
+  // }
+
+  LEDs[getLedPosition(playerPositionX, playerPositionY)] = playerColor;
   FastLED.show();
 }
 
