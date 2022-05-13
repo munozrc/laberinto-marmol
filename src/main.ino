@@ -10,6 +10,7 @@ void setup()
 {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(LEDs, NUM_ROWS * NUM_COLUMNS);
   FastLED.setBrightness(30);
+  FastLED.clear();
 }
 
 void loop()
