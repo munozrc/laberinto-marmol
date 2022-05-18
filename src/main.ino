@@ -133,6 +133,8 @@ void loop()
     {
       playerPositionY = posY;
     }
+
+    FastLED.show();
   }
 
   for (int row = 0; row < NUM_ROWS; row++)
@@ -151,7 +153,6 @@ void loop()
   }
 
   LEDs[getLedPosition(playerPositionX, playerPositionY)] = playerColor;
-  FastLED.show();
 }
 
 int getAxisValue(float raw, int originAxis, int axisThreshold)
