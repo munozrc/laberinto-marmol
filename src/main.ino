@@ -18,10 +18,10 @@
 
 CRGB LEDs[NUM_ROWS * NUM_COLUMNS];
 CRGB wallsColor = CRGB::Gray;
-CRGB playerColor = CRGB::Red;
+CRGB playerColor = CRGB::OrangeRed;
 
-int playerPositionX = 2;
-int playerPositionY = 2;
+int playerPositionX = 0;
+int playerPositionY = 0;
 
 // MPU-6050 da los valores en enteros de 16 bits
 // Valores RAW
@@ -35,21 +35,21 @@ float Angle[3];
 float dt;
 
 int board[NUM_ROWS][NUM_COLUMNS] = {
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+    {0, 0, 0, 0, 0, 0, 5, 0, 0, 0},
+    {5, 5, 5, 5, 0, 5, 5, 0, 5, 0},
+    {0, 0, 0, 0, 0, 0, 5, 0, 5, 0},
+    {5, 5, 5, 0, 5, 5, 5, 0, 5, 0},
+    {5, 0, 0, 0, 5, 0, 0, 0, 5, 0},
+    {0, 0, 5, 5, 5, 0, 5, 5, 5, 0},
+    {0, 5, 0, 0, 0, 0, 5, 0, 0, 0},
+    {0, 5, 5, 0, 5, 5, 5, 0, 0, 5},
+    {0, 0, 5, 0, 5, 0, 0, 0, 5, 0},
+    {5, 0, 0, 0, 5, 0, 5, 0, 0, 0}};
 
 void setup()
 {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(LEDs, NUM_ROWS * NUM_COLUMNS);
-  FastLED.setBrightness(100);
+  FastLED.setBrightness(200);
   FastLED.clear();
 
   Wire.begin(); // A4=SDA / A5=SCL
