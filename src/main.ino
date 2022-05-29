@@ -16,9 +16,6 @@
 
 #define DATA_PIN 6
 
-#define JOYSTICK_X_PIN A0
-#define JOYSTICK_Y_PIN A1
-
 CRGB LEDs[NUM_ROWS * NUM_COLUMNS];
 CRGB wallsColor = CRGB::Gray;
 CRGB playerColor = CRGB::Red;
@@ -38,21 +35,21 @@ float Angle[3];
 float dt;
 
 int board[NUM_ROWS][NUM_COLUMNS] = {
-    {5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 0, 0, 0, 0, 0, 0, 0, 0, 5},
-    {5, 5, 5, 5, 5, 5, 5, 5, 5, 5}};
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 void setup()
 {
   FastLED.addLeds<WS2812B, DATA_PIN, GRB>(LEDs, NUM_ROWS * NUM_COLUMNS);
-  FastLED.setBrightness(2);
+  FastLED.setBrightness(100);
   FastLED.clear();
 
   Wire.begin(); // A4=SDA / A5=SCL
@@ -113,8 +110,10 @@ void loop()
   float yValue = Angle[1];
   float zValue = Angle[2];
 
-  int directionX = getAxisValue(xValue, -24, 20);
-  int directionY = getAxisValue(yValue, 0, 10);
+  int directionX = getAxisValue(xValue, -31, 10);
+  int directionY = getAxisValue(yValue, 2, 5);
+
+  Serial.println("x= " + String(xValue, DEC) + " y=" + String(yValue, DEC));
 
   if (millis() > timestamp + speed)
   {
