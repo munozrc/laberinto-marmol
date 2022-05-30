@@ -16,12 +16,17 @@
 
 #define DATA_PIN 6
 
+#define GOAL 2
+#define WALL 5
+#define OOOO 0 // ROAD
+
 CRGB LEDs[NUM_ROWS * NUM_COLUMNS];
 CRGB wallsColor = CRGB::Gray;
 CRGB playerColor = CRGB::OrangeRed;
 
 int playerPositionX = 0;
 int playerPositionY = 0;
+int levelGame = 0;
 
 // MPU-6050 da los valores en enteros de 16 bits
 // Valores RAW
@@ -34,17 +39,26 @@ float Angle[3];
 
 float dt;
 
-int board[NUM_ROWS][NUM_COLUMNS] = {
-    {0, 0, 0, 0, 0, 0, 5, 0, 0, 0},
-    {5, 5, 5, 5, 0, 5, 5, 0, 5, 0},
-    {0, 0, 0, 0, 0, 0, 5, 0, 5, 0},
-    {5, 5, 5, 0, 5, 5, 5, 0, 5, 0},
-    {5, 0, 0, 0, 5, 0, 0, 0, 5, 0},
-    {0, 0, 5, 5, 5, 0, 5, 5, 5, 0},
-    {0, 5, 0, 0, 0, 0, 5, 0, 0, 0},
-    {0, 5, 5, 0, 5, 5, 5, 0, 0, 5},
-    {0, 0, 5, 0, 5, 0, 0, 0, 5, 0},
-    {5, 0, 0, 0, 5, 0, 5, 0, 0, 0}};
+int board[2][NUM_ROWS][NUM_COLUMNS] = {{{OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, GOAL}},
+                                       {{OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, WALL, OOOO, OOOO, OOOO},
+                                        {WALL, WALL, WALL, WALL, OOOO, WALL, WALL, OOOO, WALL, OOOO},
+                                        {OOOO, OOOO, OOOO, OOOO, OOOO, OOOO, WALL, OOOO, WALL, OOOO},
+                                        {WALL, WALL, WALL, OOOO, WALL, WALL, WALL, OOOO, WALL, OOOO},
+                                        {WALL, OOOO, OOOO, OOOO, WALL, OOOO, OOOO, OOOO, WALL, OOOO},
+                                        {OOOO, OOOO, WALL, WALL, WALL, OOOO, WALL, WALL, WALL, OOOO},
+                                        {OOOO, WALL, OOOO, OOOO, OOOO, OOOO, WALL, OOOO, OOOO, OOOO},
+                                        {OOOO, WALL, WALL, OOOO, WALL, WALL, WALL, OOOO, OOOO, WALL},
+                                        {OOOO, OOOO, WALL, OOOO, WALL, OOOO, OOOO, OOOO, WALL, GOAL},
+                                        {WALL, OOOO, OOOO, OOOO, WALL, OOOO, WALL, OOOO, OOOO, OOOO}}};
 
 void setup()
 {
@@ -121,16 +135,25 @@ void loop()
 
     int posX = playerPositionX + directionX;
     int posY = playerPositionY + directionY;
-    int cell = board[posX][posY];
+    int cell = board[levelGame][posX][posY];
 
-    if (posX <= 9 && posX >= 0 && cell == 0)
+    if (cell == 2)
     {
-      playerPositionX = posX;
+      levelGame < 2 ? levelGame++ : 0;
+      playerPositionX = 0;
+      playerPositionY = 0;
     }
-
-    if (posY <= 9 && posY >= 0 && cell == 0)
+    else
     {
-      playerPositionY = posY;
+      if (posX <= 9 && posX >= 0 && cell == OOOO)
+      {
+        playerPositionX = posX;
+      }
+
+      if (posY <= 9 && posY >= 0 && cell == OOOO)
+      {
+        playerPositionY = posY;
+      }
     }
 
     FastLED.show();
@@ -140,11 +163,18 @@ void loop()
   {
     for (int column = 0; column < NUM_COLUMNS; column++)
     {
-      if (board[row][column] == 5)
+
+      if (board[levelGame][row][column] == GOAL)
+      {
+        LEDs[getLedPosition(row, column)] = CRGB::Blue;
+      }
+
+      if (board[levelGame][row][column] == WALL)
       {
         LEDs[getLedPosition(row, column)] = wallsColor;
       }
-      else if (board[row][column] == 0)
+
+      if (board[levelGame][row][column] == OOOO)
       {
         LEDs[getLedPosition(row, column)] = CRGB::Black;
       }
