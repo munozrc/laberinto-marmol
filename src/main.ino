@@ -137,26 +137,19 @@ void loop()
     int posY = playerPositionY + directionY;
     int cell = board[levelGame][posX][posY];
 
-    if (cell == 2)
+    if (cell == GOAL)
     {
       levelGame < 2 ? levelGame++ : 0;
       playerPositionX = 0;
       playerPositionY = 0;
     }
-    else
+    else if (cell == OOOO)
     {
-      if (posX <= 9 && posX >= 0 && cell == OOOO)
-      {
+      if (posX <= 9 && posX >= 0)
         playerPositionX = posX;
-      }
-
-      if (posY <= 9 && posY >= 0 && cell == OOOO)
-      {
+      if (posY <= 9 && posY >= 0)
         playerPositionY = posY;
-      }
     }
-
-    FastLED.show();
   }
 
   for (int row = 0; row < NUM_ROWS; row++)
@@ -182,6 +175,8 @@ void loop()
   }
 
   LEDs[getLedPosition(playerPositionX, playerPositionY)] = playerColor;
+
+  FastLED.show();
 }
 
 int getAxisValue(float raw, int originAxis, int axisThreshold)
